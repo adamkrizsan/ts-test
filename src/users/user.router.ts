@@ -5,6 +5,10 @@ import type { Request, Response } from "express"
 export const userRouter = express.Router();
 
 import * as UserService from "./user.service"
+import { error } from "console";
+
+
+
 
 userRouter.get("/:id", async (req : Request, res : Response) => {
     const id: number = parseInt(req.params.id, 10)
@@ -19,6 +23,7 @@ userRouter.get("/:id", async (req : Request, res : Response) => {
         return res.status(500).json(error.message)
     }
 })
+
 
 userRouter.post("/", async (req : Request, res : Response) => {
 
@@ -42,6 +47,30 @@ userRouter.put(
             const user = req.body
             const updatedUser = await UserService.updateUser(user, id)
             return res.status(200).json(updatedUser)
+        } catch (error : any) {
+            return res.status(500).json(error.message)
+        }
+    }
+)
+
+userRouter.get(
+    "/",
+    async (req: Request, res: Response) => {
+        try{
+            const users = await UserService.listUsers()
+            return res.status(200).json(users)
+        } catch (error : any) {
+            return res.status(500).json(error.message)
+        }
+})
+
+userRouter.delete(
+    "/:id",
+    async (req : Request, res: Response) => {
+        const id : number = parseInt(req.params.id, 10)
+        try{
+            const deleted = await UserService.deleteUser(id)
+            return res.status(200).json(deleted)
         } catch (error : any) {
             return res.status(500).json(error.message)
         }

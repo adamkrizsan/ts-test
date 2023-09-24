@@ -51,3 +51,27 @@ export const updateUser = async(
             }
         })
     }
+
+export const listUsers = async(): Promise<User[]> => {
+        return db.user.findMany({
+                select:{
+                    id: true,
+                    name: true,
+                    email: true
+                }
+            }
+        )
+    }
+
+export const deleteUser = async(id: number): Promise<User> => {
+    return db.user.delete({
+        where: {
+            id,
+        },
+        select:{
+            id: true,
+            name: true,
+            email: true,
+        }
+    })
+} 
