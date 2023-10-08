@@ -5,12 +5,9 @@ import type { Request, Response } from "express"
 export const userRouter = express.Router();
 
 import * as UserService from "./user.service"
-import { error } from "console";
 
 
-
-
-userRouter.get("/:id", async (req : Request, res : Response) => {
+userRouter.get("/:id", async (req: Request, res: Response, next) => {
     const id: number = parseInt(req.params.id, 10)
     console.log(`Reqest recieved with id: ${id}`)
     try {
@@ -19,60 +16,61 @@ userRouter.get("/:id", async (req : Request, res : Response) => {
             return res.status(200).json(user)
         }
         return res.status(404).json("User not found")
-    }catch(error : any) {
-        return res.status(500).json(error.message)
+        
+    }catch(error: any) {
+        next(error)
     }
 })
 
 
-userRouter.post("/", async (req : Request, res : Response) => {
+userRouter.post("/", async (req: Request, res: Response, next) => {
 
     console.log(`POST reqest recieved`)
 
-    try { 
-        const user = req.body
-        const newUser = await UserService.createUser(user)
-        return res.status(201).json(newUser)
-    } catch (error : any) {
-        return res.status(500).json(error.message)
-    }
+        try { 
+            const user = req.body
+            const newUser = await UserService.createUser(user)
+            return res.status(201).json(newUser)
+        } catch (error : any) {
+            next(error)
+        }
     }    
 )
 
 userRouter.put(
     "/:id",
-    async (req : Request, res : Response) => {
+    async (req: Request, res: Response, next) => {
         const id : number = parseInt(req.params.id, 10)
         try {
             const user = req.body
             const updatedUser = await UserService.updateUser(user, id)
             return res.status(200).json(updatedUser)
         } catch (error : any) {
-            return res.status(500).json(error.message)
+            next(error)
         }
     }
 )
 
 userRouter.get(
     "/",
-    async (req: Request, res: Response) => {
+    async (req: Request, res: Response, next) => {
         try{
             const users = await UserService.listUsers()
             return res.status(200).json(users)
         } catch (error : any) {
-            return res.status(500).json(error.message)
+            next(error)
         }
 })
 
 userRouter.delete(
     "/:id",
-    async (req : Request, res: Response) => {
+    async (req: Request, res: Response, next) => {
         const id : number = parseInt(req.params.id, 10)
         try{
             const deleted = await UserService.deleteUser(id)
             return res.status(200).json(deleted)
         } catch (error : any) {
-            return res.status(500).json(error.message)
+            next(error)
         }
     }
 )

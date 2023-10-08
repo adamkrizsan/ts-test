@@ -1,5 +1,4 @@
 import express from "express"
-import * as dotenv from "dotenv"
 import { userRouter } from "./src/users/user.router"
 
 if (!process.env.PORT) {
