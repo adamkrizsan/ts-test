@@ -1,8 +1,12 @@
 import express from "express"
-
+import * as dotenv from "dotenv"
 import { userRouter } from "./src/users/user.router"
 
-const PORT = 8080
+if (!process.env.PORT) {
+    process.exit(1);
+}
+
+const PORT: number = parseInt(process.env.PORT as string, 10)
 
 const app = express()
 
