@@ -69,8 +69,9 @@ userRouter.delete(
         try{
             const deleted = await UserService.deleteUser(id)
             return res.status(200).json(deleted)
-        } catch (error : any) {
+        } catch (error: any) {
             next(error)
         }
     }
 )
+
